@@ -1,10 +1,11 @@
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security.api_key import APIKeyHeader
 from typing import List, Tuple, Dict, Any
-import secrets
 from datetime import datetime, timedelta
+import secrets
 import heapq
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 app = FastAPI()
 app.add_middleware(
@@ -15,6 +16,9 @@ app.add_middleware(
     allow_headers=["*"],  
 )
 
+class State(BaseModel):
+    state: str
+    coord: List[float]
 
 estados_grafo = {
     "Alabama": {"Florida": 558, "Georgia": 302, "Mississippi": 222},
@@ -70,58 +74,59 @@ estados_grafo = {
 }
 
 
-coordenadas_estados = {
-    "Alabama": (32.806671, -86.791130),
-    "Alaska": (61.370716, -152.404419),
-    "Arizona": (33.729759, -111.431221),
-    "Arkansas": (34.969704, -92.373123),
-    "California": (36.116203, -119.681564),
-    "Colorado": (39.059811, -105.311104),
-    "Connecticut": (41.597782, -72.755371),
-    "Delaware": (39.318523, -75.507141),
-    "Florida": (27.766279, -81.686783),
-    "Georgia": (33.040619, -83.643074),
-    "Hawaii": (21.094318, -157.498337),
-    "Idaho": (44.240459, -114.478828),
-    "Illinois": (40.349457, -88.998996),
-    "Indiana": (39.849426, -86.258278),
-    "Iowa": (42.011539, -93.210526),
-    "Kansas": (39.059811, -98.328000),
-    "Kentucky": (37.668140, -84.670067),
-    "Louisiana": (31.169546, -91.867805),
-    "Maine": (44.693947, -69.381927),
-    "Maryland": (39.063946, -76.802101),
-    "Massachusetts": (42.230171, -71.531162),
-    "Michigan": (43.326618, -84.536095),
-    "Minnesota": (45.694454, -93.900192),
-    "Mississippi": (32.741646, -89.678696),
-    "Missouri": (38.456085, -92.288368),
-    "Montana": (46.921925, -110.454353),
-    "Nebraska": (41.492537, -99.901810),
-    "Nevada": (38.313515, -117.055374),
-    "New Hampshire": (43.452492, -71.563896),
-    "New Jersey": (40.298904, -74.521011),
-    "New Mexico": (34.840515, -106.248482),
-    "New York": (42.165726, -74.948051),
-    "North Carolina": (35.630066, -79.806419),
-    "North Dakota": (47.528912, -99.784012),
-    "Ohio": (40.388783, -82.764915),
-    "Oklahoma": (35.565342, -96.928917),
-    "Oregon": (43.804133, -120.554201),
-    "Pennsylvania": (40.590752, -77.209755),
-    "Rhode Island": (41.680893, -71.511780),
-    "South Carolina": (33.856892, -80.945007),
-    "South Dakota": (44.299782, -99.438828),
-    "Tennessee": (35.747845, -86.692345),
-    "Texas": (31.054487, -97.563461),
-    "Utah": (40.150032, -111.862434),
-    "Vermont": (44.045876, -72.710686),
-    "Virginia": (37.769337, -78.169968),
-    "Washington": (47.400902, -121.490494),
-    "West Virginia": (38.491226, -80.954201),
-    "Wisconsin": (43.784440, -88.787868),
-    "Wyoming": (42.755966, -107.302490),
-}
+estados = [
+    { "state": "Alabama", "coord": [32.806671, -86.791130] },
+    { "state": "Alaska", "coord": [61.370716, -152.404419] },
+    { "state": "Arizona", "coord": [33.729759, -111.431221] },
+    { "state": "Arkansas", "coord": [34.969704, -92.373123] },
+    { "state": "California", "coord": [36.116203, -119.681564] },
+    { "state": "Colorado", "coord": [39.059811, -105.311104] },
+    { "state": "Connecticut", "coord": [41.597782, -72.755371] },
+    { "state": "Delaware", "coord": [39.318523, -75.507141] },
+    { "state": "Florida", "coord": [27.766279, -81.686783] },
+    { "state": "Georgia", "coord": [33.040619, -83.643074] },
+    { "state": "Hawaii", "coord": [21.094318, -157.498337] },
+    { "state": "Idaho", "coord": [44.240459, -114.478828] },
+    { "state": "Illinois", "coord": [40.349457, -88.998996] },
+    { "state": "Indiana", "coord": [39.849426, -86.258278] },
+    { "state": "Iowa", "coord": [42.011539, -93.210526] },
+    { "state": "Kansas", "coord": [39.059811, -98.328000] },
+    { "state": "Kentucky", "coord": [37.668140, -84.670067] },
+    { "state": "Louisiana", "coord": [31.169546, -91.867805] },
+    { "state": "Maine", "coord": [44.693947, -69.381927] },
+    { "state": "Maryland", "coord": [39.063946, -76.802101] },
+    { "state": "Massachusetts", "coord": [42.230171, -71.531162] },
+    { "state": "Michigan", "coord": [43.326618, -84.536095] },
+    { "state": "Minnesota", "coord": [45.694454, -93.900192] },
+    { "state": "Mississippi", "coord": [32.741646, -89.678696] },
+    { "state": "Missouri", "coord": [38.456085, -92.288368] },
+    { "state": "Montana", "coord": [46.921925, -110.454353] },
+    { "state": "Nebraska", "coord": [41.492537, -99.901810] },
+    { "state": "Nevada", "coord": [38.313515, -117.055374] },
+    { "state": "New Hampshire", "coord": [43.452492, -71.563896] },
+    { "state": "New Jersey", "coord": [40.298904, -74.521011] },
+    { "state": "New Mexico", "coord": [34.840515, -106.248482] },
+    { "state": "New York", "coord": [42.165726, -74.948051] },
+    { "state": "North Carolina", "coord": [35.630066, -79.806419] },
+    { "state": "North Dakota", "coord": [47.528912, -99.784012] },
+    { "state": "Ohio", "coord": [40.388783, -82.764915] },
+    { "state": "Oklahoma", "coord": [35.565342, -96.928917] },
+    { "state": "Oregon", "coord": [43.804133, -120.554201] },
+    { "state": "Pennsylvania", "coord": [40.590752, -77.209755] },
+    { "state": "Rhode Island", "coord": [41.680893, -71.511780] },
+    { "state": "South Carolina", "coord": [33.856892, -80.945007] },
+    { "state": "South Dakota", "coord": [44.299782, -99.438828] },
+    { "state": "Tennessee", "coord": [35.747845, -86.692345] },
+    { "state": "Texas", "coord": [31.054487, -97.563461] },
+    { "state": "Utah", "coord": [40.150032, -111.862434] },
+    { "state": "Vermont", "coord": [44.045876, -72.710686] },
+    { "state": "Virginia", "coord": [37.769337, -78.169968] },
+    { "state": "Washington", "coord": [47.400902, -121.490494] },
+    { "state": "West Virginia", "coord": [38.491226, -80.954201] },
+    { "state": "Wisconsin", "coord": [43.784440, -88.787868] },
+    { "state": "Wyoming", "coord": [42.755966, -107.302490] }
+]
+
 
 
 def dijkstra(grafo: Dict[str, Dict[str, int]], inicio: str, destino: str) -> Tuple[int, List[str]]:
@@ -146,10 +151,9 @@ def dijkstra(grafo: Dict[str, Dict[str, int]], inicio: str, destino: str) -> Tup
 
     return float("inf"), []
 
-
-@app.get("/coordenadas")
-async def obtener_coordenadas() -> Dict[str, Tuple[float, float]]:
-    return coordenadas_estados
+@app.get("/coordenadas", response_model=List[State])
+async def obtener_coordenadas():
+    return estados
 
 
 @app.get("/camino_mas_corto/{inicio}/{destino}")
