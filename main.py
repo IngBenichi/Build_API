@@ -9,14 +9,8 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-# Lista para almacenar los detalles de las solicitudes
+
 request_log: List[Dict] = []
-
-
-
-
-
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -180,8 +174,6 @@ async def obtener_estados() -> List[str]:
     return list(estados_grafo.keys())
 
 
-
-
 APIKeyHeader_name = "X-API-KEY"
 api_key_header = APIKeyHeader(name=APIKeyHeader_name)
 api_keys_validas = {}
@@ -219,17 +211,17 @@ def superuser_endpoint(api_key: str = Depends(api_key_header)):
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
-    # Extraer información de la solicitud
+
     request_info = {
         "method": request.method,
         "url": str(request.url),
         "headers": dict(request.headers),
         "client_ip": request.client.host
     }
-    # Almacenar la información en la lista de logs
+
     request_log.append(request_info)
     
-    # Procesar la solicitud
+
     response = await call_next(request)
     return response
 
@@ -240,7 +232,7 @@ async def get_requests():
     """
     return {"requests": request_log}
 
-# Ejemplo de un endpoint adicional
+
 @app.get("/")
 async def root():
     return {"message": "Hola, FastAPI"}
