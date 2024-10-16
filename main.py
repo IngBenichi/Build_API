@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.security.api_key import APIKeyHeader
 from typing import List, Tuple, Dict, Any
 from datetime import datetime, timedelta
@@ -8,6 +8,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 app = FastAPI()
+
+# Lista para almacenar los detalles de las solicitudes
+request_log: List[Dict] = []
+
+
+
+
+
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  
@@ -205,3 +215,32 @@ def superuser_endpoint(api_key: str = Depends(api_key_header)):
     if api_key != SUPERUSER_API_KEY:
         raise HTTPException(status_code=403, detail="Acceso denegado: se requiere superusuario")
     return {"detail": "Acceso permitido para el superusuario"}
+
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    # Extraer información de la solicitud
+    request_info = {
+        "method": request.method,
+        "url": str(request.url),
+        "headers": dict(request.headers),
+        "client_ip": request.client.host
+    }
+    # Almacenar la información en la lista de logs
+    request_log.append(request_info)
+    
+    # Procesar la solicitud
+    response = await call_next(request)
+    return response
+
+@app.get("/requests")
+async def get_requests():
+    """
+    Endpoint para ver todas las solicitudes realizadas.
+    """
+    return {"requests": request_log}
+
+# Ejemplo de un endpoint adicional
+@app.get("/")
+async def root():
+    return {"message": "Hola, FastAPI"}
