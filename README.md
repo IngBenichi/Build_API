@@ -1,5 +1,3 @@
-Claro, aquí tienes el texto sin formato Markdown:
-
 ---
 
 # FastAPI Estados y Caminos Más Cortos
