@@ -365,7 +365,7 @@ projects = [
       "completion": 10
     },
     {
-      "id" : "3",
+      "id" : 3,
       "title": "Fix Platform Errors",
       "img": "./src/assets/Stadistics/fixplatform.svg",
       "members": "./src/assets/Stadistics/avatar2.svg",
@@ -373,7 +373,7 @@ projects = [
       "completion": 100
     },
     {
-      "id" : "4",
+      "id" : 4,
       "title": "Launch our Mobile App",
       "img": "./src/assets/Stadistics/launchmobile.svg",
       "members": "./src/assets/Stadistics/avatar4.svg",
@@ -381,7 +381,7 @@ projects = [
       "completion": 100
     },
     {
-      "id" : "5",
+      "id" : 5,
       "title": "Add the New Pricing Page",
       "img": "./src/assets/Stadistics/addpricing.svg",
       "members": "./src/assets/Stadistics/avatar3.svg",
@@ -389,7 +389,7 @@ projects = [
       "completion": 25
     },
     {
-      "id" : "6",
+      "id" : 6,
       "title": "Redesign New Online Shop",
       "img": "./src/assets/Stadistics/redesign.svg",
       "members": "./src/assets/Stadistics/avatar2.svg",
