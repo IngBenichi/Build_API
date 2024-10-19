@@ -216,7 +216,7 @@ def superuser_endpoint(api_key: str = Depends(api_key_header)):
 async def root():
     return {"message": "Hello, FastAPI"}
 
-app.mount("/assets/Stadistics", StaticFiles(directory="static"), name="static")
+app.mount("./src/assets/Stadistics", StaticFiles(directory="static"), name="static")
 
 # Datos de ejemplo
 statistics = [
@@ -225,28 +225,28 @@ statistics = [
         "name": "Today's Money",
         "price": 53000,
         "increase": 55,
-        "image": "/assets/Stadistics/wallet.svg"  
+        "image": "./src/assets/Stadistics/wallet.svg"  
     },
     {
         "id": 2,
         "name": "Today's Users",
         "price": 2300,
         "increase": 5,
-        "image": "/assets/Stadistics/land.svg"
+        "image": "./src/assets/Stadistics/land.svg"
     },
     {
         "id": 3,
         "name": "New Clients",
         "price": 3052,
         "increase": -14,
-        "image": "/assets/Stadistics/document.svg"
+        "image": "./src/assets/Stadistics/document.svg"
     },
     {
         "id": 4,
         "name": "Total Sales",
         "price": 173000,
         "increase": 8,
-        "image": "/assets/Stadistics/car.svg"
+        "image": "./src/assets/Stadistics/car.svg"
     },
 ]
 
@@ -276,44 +276,44 @@ class OrdersOverview(BaseModel):
 orders_overview = OrdersOverview(
     monthly_earnings=MonthlyEarnings(
         percentage="30%",
-        image="/assets/Stadistics/check.svg" 
+        image="./src/assets/Stadistics/check.svg" 
     ),
     orders=[
         {
             "id": 1,
             "design_changes": 2400,
             "date": "22 DEC 7:20 PM",
-            "image": "/assets/Stadistics/campaign.svg"
+            "image": "./src/assets/Stadistics/campaign.svg"
         },
         {
             "id": 2,
             "title": "New order #4219423",
             "date": "21 DEC 11:21 PM",
-            "image": "/assets/Stadistics/html.svg" 
+            "image": "./src/assets/Stadistics/html.svg" 
         },
         {
             "id": 3,
             "title": "Server Payments for April",
             "date": "21 DEC 09:28 PM",
-            "image": "/assets/Stadistics/car2.svg" 
+            "image": "./src/assets/Stadistics/car2.svg" 
         },
         {
             "id": 4,
             "title": "New card added for order #3210145",
             "date": "20 DEC 03:52 PM",
-            "image": "/assets/Stadistics/card.svg" 
+            "image": "./src/assets/Stadistics/card.svg" 
         },
         {
             "id": 5,
             "title": "Unlock packages for Development",
             "date": "19 DEC 11:35 PM",
-            "image": "/assets/Stadistics/unlocked.svg"
+            "image": "./src/assets/Stadistics/unlocked.svg"
         },
         {
             "id": 6,
             "title": "New order #9851258",
             "date": "18 DEC 04:41 PM",
-            "image": "/assets/Stadistics/xd.svg"  
+            "image": "./src/assets/Stadistics/xd.svg"  
         }
     ]
 )
