@@ -216,43 +216,44 @@ def superuser_endpoint(api_key: str = Depends(api_key_header)):
 async def root():
     return {"message": "Hello, FastAPI"}
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/assets/Stadistics", StaticFiles(directory="static"), name="static")
 
 # Datos de ejemplo
-data = [
+statistics = [
     {
         "id": 1,
         "name": "Today's Money",
         "price": 53000,
         "increase": 55,
-        "image": "/static/wallet.svg"  # Ruta al archivo SVG
+        "image": "/assets/Stadistics/wallet.svg"  
     },
     {
         "id": 2,
         "name": "Today's Users",
         "price": 2300,
         "increase": 5,
-        "image": "/static/land.svg"
+        "image": "/assets/Stadistics/land.svg"
     },
     {
         "id": 3,
         "name": "New Clients",
         "price": 3052,
         "increase": -14,
-        "image": "/static/document.svg"
+        "image": "/assets/Stadistics/document.svg"
     },
     {
         "id": 4,
         "name": "Total Sales",
         "price": 173000,
         "increase": 8,
-        "image": "/static/car.svg"
+        "image": "/assets/Stadistics/car.svg"
     },
 ]
 
-@app.get("/data")
+
+@app.get("/statistics")
 def get_data():
-    return JSONResponse(content=data)
+    return JSONResponse(content=statistics)
 
 
 class Order(BaseModel):
@@ -261,64 +262,66 @@ class Order(BaseModel):
     date: str
     image: Optional[str] = None
 
-# Define the data model for monthly earnings
+
 class MonthlyEarnings(BaseModel):
     percentage: str
     image: str
 
-# Define the data model for the orders overview
+
 class OrdersOverview(BaseModel):
     monthly_earnings: MonthlyEarnings
     orders: List[Order]
 
-# Example data
-# Example data with IDs for orders
+
 orders_overview = OrdersOverview(
     monthly_earnings=MonthlyEarnings(
         percentage="30%",
-        image="/static/check.svg"
+        image="/assets/Stadistics/check.svg" 
     ),
     orders=[
         {
             "id": 1,
             "design_changes": 2400,
             "date": "22 DEC 7:20 PM",
-            "image": "/static/campaign.svg"
+            "image": "/assets/Stadistics/campaign.svg"
         },
         {
             "id": 2,
             "title": "New order #4219423",
             "date": "21 DEC 11:21 PM",
-            "image": "/static/html.svg"
+            "image": "/assets/Stadistics/html.svg" 
         },
         {
             "id": 3,
             "title": "Server Payments for April",
             "date": "21 DEC 09:28 PM",
-            "image": "/static/car2.svg"
+            "image": "/assets/Stadistics/car2.svg" 
         },
         {
             "id": 4,
             "title": "New card added for order #3210145",
             "date": "20 DEC 03:52 PM",
-            "image": "/static/card.svg"
+            "image": "/assets/Stadistics/card.svg" 
         },
         {
             "id": 5,
             "title": "Unlock packages for Development",
             "date": "19 DEC 11:35 PM",
-            "image": "/static/unlocked.svg"
+            "image": "/assets/Stadistics/unlocked.svg"
         },
         {
             "id": 6,
             "title": "New order #9851258",
             "date": "18 DEC 04:41 PM",
-            "image": "/static/xd.svg"
+            "image": "/assets/Stadistics/xd.svg"  
         }
     ]
 )
 
-# Create an endpoint to get the orders overview
+
+
 @app.get("/orders")
 def get_orders():
     return JSONResponse(content=orders_overview.dict())
+
+
