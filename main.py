@@ -221,28 +221,32 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # Datos de ejemplo
 data = [
     {
+        "id": 1,
         "name": "Today's Money",
         "price": 53000,
-        "incremento": 55,
-        "image": "/static/billetera.svg"  # Ruta al archivo SVG
+        "increase": 55,
+        "image": "/static/wallet.svg"  # Ruta al archivo SVG
     },
     {
+        "id": 2,
         "name": "Today's Users",
         "price": 2300,
-        "incremento": 5,
-        "image": "/static/tierra.svg"
+        "increase": 5,
+        "image": "/static/land.svg"
     },
     {
+        "id": 3,
         "name": "New Clients",
         "price": 3052,
-        "incremento": -14,
-        "image": "/static/documento.svg"
+        "increase": -14,
+        "image": "/static/document.svg"
     },
     {
+        "id": 4,
         "name": "Total Sales",
         "price": 173000,
-        "incremento": 8,
-        "image": "/static/carro.svg"
+        "increase": 8,
+        "image": "/static/car.svg"
     },
 ]
 
@@ -268,6 +272,7 @@ class OrdersOverview(BaseModel):
     orders: List[Order]
 
 # Example data
+# Example data with IDs for orders
 orders_overview = OrdersOverview(
     monthly_earnings=MonthlyEarnings(
         percentage="30%",
@@ -275,31 +280,37 @@ orders_overview = OrdersOverview(
     ),
     orders=[
         {
+            "id": 1,
             "design_changes": 2400,
             "date": "22 DEC 7:20 PM",
-            "image": "/static/campana.svg"
+            "image": "/static/campaign.svg"
         },
         {
+            "id": 2,
             "title": "New order #4219423",
             "date": "21 DEC 11:21 PM",
             "image": "/static/html.svg"
         },
         {
+            "id": 3,
             "title": "Server Payments for April",
             "date": "21 DEC 09:28 PM",
-            "image": "/static/carro2.svg"
+            "image": "/static/car2.svg"
         },
         {
+            "id": 4,
             "title": "New card added for order #3210145",
             "date": "20 DEC 03:52 PM",
             "image": "/static/card.svg"
         },
         {
+            "id": 5,
             "title": "Unlock packages for Development",
             "date": "19 DEC 11:35 PM",
             "image": "/static/unlocked.svg"
         },
         {
+            "id": 6,
             "title": "New order #9851258",
             "date": "18 DEC 04:41 PM",
             "image": "/static/xd.svg"
