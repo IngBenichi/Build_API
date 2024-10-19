@@ -6,6 +6,9 @@ import secrets
 import heapq
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
+from typing import List, Optional
 
 app = FastAPI()
 
@@ -209,30 +212,102 @@ def superuser_endpoint(api_key: str = Depends(api_key_header)):
     return {"detail": "Acceso permitido para el superusuario"}
 
 
-@app.middleware("http")
-async def log_requests(request: Request, call_next):
-
-    request_info = {
-        "method": request.method,
-        "url": str(request.url),
-        "headers": dict(request.headers),
-        "client_ip": request.client.host
-    }
-
-    request_log.append(request_info)
-    
-
-    response = await call_next(request)
-    return response
-
-@app.get("/requests")
-async def get_requests():
-    """
-    Endpoint para ver todas las solicitudes realizadas.
-    """
-    return {"requests": request_log}
-
-
 @app.get("/")
 async def root():
     return {"message": "Hola, FastAPI"}
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Datos de ejemplo
+data = [
+    {
+        "name": "Today's Money",
+        "price": 53000,
+        "incremento": 55,
+        "image": "/static/billetera.svg"  # Ruta al archivo SVG
+    },
+    {
+        "name": "Today's Users",
+        "price": 2300,
+        "incremento": 5,
+        "image": "/static/tierra.svg"
+    },
+    {
+        "name": "New Clients",
+        "price": 3052,
+        "incremento": -14,
+        "image": "/static/documento.svg"
+    },
+    {
+        "name": "Total Sales",
+        "price": 173000,
+        "incremento": 8,
+        "image": "/static/carro.svg"
+    },
+]
+
+@app.get("/data")
+def get_data():
+    return JSONResponse(content=data)
+
+
+class Order(BaseModel):
+    design_changes: Optional[int] = None
+    title: Optional[str] = None
+    date: str
+    image: Optional[str] = None
+
+# Define the data model for monthly earnings
+class MonthlyEarnings(BaseModel):
+    percentage: str
+    image: str
+
+# Define the data model for the orders overview
+class OrdersOverview(BaseModel):
+    monthly_earnings: MonthlyEarnings
+    orders: List[Order]
+
+# Example data
+orders_overview = OrdersOverview(
+    monthly_earnings=MonthlyEarnings(
+        percentage="30%",
+        image="/static/check.svg"
+    ),
+    orders=[
+        {
+            "design_changes": 2400,
+            "date": "22 DEC 7:20 PM",
+            "image": "/static/campana.svg"
+        },
+        {
+            "title": "New order #4219423",
+            "date": "21 DEC 11:21 PM",
+            "image": "/static/html.svg"
+        },
+        {
+            "title": "Server Payments for April",
+            "date": "21 DEC 09:28 PM",
+            "image": "/static/carro2.svg"
+        },
+        {
+            "title": "New card added for order #3210145",
+            "date": "20 DEC 03:52 PM",
+            "image": "/static/card.svg"
+        },
+        {
+            "title": "Unlock packages for Development",
+            "date": "19 DEC 11:35 PM",
+            "image": "/static/unlocked.svg"
+        },
+        {
+            "title": "New order #9851258",
+            "date": "18 DEC 04:41 PM",
+            "image": "/static/xd.svg"
+        }
+    ]
+)
+
+# Create an endpoint to get the orders overview
+@app.get("/orders")
+def get_orders():
+    return JSONResponse(content=orders_overview.dict())
