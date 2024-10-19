@@ -324,75 +324,75 @@ orders_overview = OrdersOverview(
 def get_orders():
     return JSONResponse(content=orders_overview.dict())
 
-
+app.mount("/src/assets/Projects", StaticFiles(directory="projects"), name="projects")
 class Projects(BaseModel):
     id: int
-    title: Optional[str] = None
+    name: Optional[str] = None
     img: Optional[str] = None
     members: Optional[str] = None
     budget: Optional[int] = 0
     completion: Optional[int] = None
 
-class MonthlyEarnings(BaseModel):
+class MonthlyEarning(BaseModel):
     percentage: str
     image: str
 
 
 class ProjectsOverview(BaseModel):
-    monthly_earnings: MonthlyEarnings
+    monthly_earning: MonthlyEarning
     projects: List[Projects]
 
 projects_overview = ProjectsOverview(
-    monthly_earnings=MonthlyEarnings(
+    monthly_earning=MonthlyEarning(
         percentage="30",
         image="./src/assets/Stadistics/check.svg" 
     ),
 projects = [
     {
       "id" : 1,
-      "title": "Chakra Soft UI Version",
+      "name": "Chakra Soft UI Version",
       "img": "./src/assets/Stadistics/xd.svg",
-      "members": "./src/assets/Stadistics/avatar3.svg",
+      "members": "./src/assets/Projects/avatarsthree.svg",
       "budget": 14000,
       "completion": 60
     },
     {
       "id" : 2,
-      "title": "Add Progress Track",
-      "img": "./src/assets/Stadistics/addprogress.svg",
-      "members": "./src/assets/Stadistics/avatar2.svg",
+      "name": "Add Progress Track",
+      "img": "./src/assets/Projects/addprogress.svg",
+      "members": "./src/assets/Projects/avatartwo.svg",
       "budget": 3000,
       "completion": 10
     },
     {
       "id" : 3,
-      "title": "Fix Platform Errors",
-      "img": "./src/assets/Stadistics/fixplatform.svg",
-      "members": "./src/assets/Stadistics/avatar2.svg",
+      "name": "Fix Platform Errors",
+      "img": "./src/assets/Projects/fixplatform.svg",
+      "members": "./src/assets/Projects/avatartwo.svg",
       "budget": 0,
       "completion": 100
     },
     {
       "id" : 4,
-      "title": "Launch our Mobile App",
-      "img": "./src/assets/Stadistics/launchmobile.svg",
-      "members": "./src/assets/Stadistics/avatar4.svg",
+      "name": "Launch our Mobile App",
+      "img": "./src/assets/Projects/launchmobile.svg",
+      "members": "./src/assets/Projects/avatarfour.svg",
       "budget": 32000,
       "completion": 100
     },
     {
       "id" : 5,
-      "title": "Add the New Pricing Page",
-      "img": "./src/assets/Stadistics/addpricing.svg",
-      "members": "./src/assets/Stadistics/avatar3.svg",
+      "name": "Add the New Pricing Page",
+      "img": "./src/assets/Projects/addpricing.svg",
+      "members": "./src/assets/Projects/avatarsthree.svg",
       "budget": 400,
       "completion": 25
     },
     {
       "id" : 6,
-      "title": "Redesign New Online Shop",
-      "img": "./src/assets/Stadistics/redesign.svg",
-      "members": "./src/assets/Stadistics/avatar2.svg",
+      "name": "Redesign New Online Shop",
+      "img": "./src/assets/Projects//redesign.svg",
+      "members": "./src/assets/Projects/avatartwo.svg",
       "budget": 7600,
       "completion": 40
     },
