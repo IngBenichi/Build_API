@@ -1,37 +1,42 @@
----
+# FastAPI States and Shortest Paths
 
-# FastAPI Estados y Caminos Más Cortos
+This project provides an API to work with a graph of states and calculate the shortest path between them using Dijkstra's algorithm. The API also allows obtaining state coordinates and generating API keys for accessing protected endpoints.
 
-Este proyecto proporciona una API para trabajar con un grafo de estados y calcular el camino más corto entre ellos utilizando el algoritmo de Dijkstra. La API también permite obtener coordenadas de estados y generar claves de API para acceder a los endpoints protegidos.
-
-## Requisitos
+## Requirements
 
 - Python 3.12.3
 - FastAPI
 - Uvicorn
 
-## Instalación
+## Installation
 
-1. Clona el repositorio:
+1. Clone the repository:
+   ```bash
    git clone https://github.com/IngBenichi/Build_API.git
    cd Build_API
+   ```
 
-2. Instala las dependencias:
+2. Install the dependencies:
+   ```bash
    pip install fastapi uvicorn
+   ```
 
-3. Ejecuta el servidor:
+3. Run the server:
+   ```bash
    uvicorn main:app --reload
+   ```
 
-El servidor se iniciará en http://127.0.0.1:8000.
+The server will start at [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
 ## Endpoints
 
-### 1. Obtener Coordenadas de los Estados
+### 1. Get State Coordinates
 
-- **URL**: /coordenadas
-- **Método**: GET
-- **Descripción**: Devuelve una lista de estados con sus coordenadas.
-- **Respuesta**:
+- **URL**: `/coordinates`
+- **Method**: `GET`
+- **Description**: Returns a list of states with their coordinates.
+- **Response**:
+  ```json
   [
     {
       "state": "Alabama",
@@ -39,77 +44,132 @@ El servidor se iniciará en http://127.0.0.1:8000.
     },
     ...
   ]
+  ```
 
-### 2. Obtener el Camino Más Corto
+### 2. Get Shortest Path
 
-- **URL**: /camino_mas_corto/{inicio}/{destino}
-- **Método**: GET
-- **Descripción**: Calcula el camino más corto entre dos estados.
-- **Parámetros**:
-  - inicio: Nombre del estado de origen.
-  - destino: Nombre del estado de destino.
-- **Respuesta**:
+- **URL**: `/shortest_path/{start}/{destiny}`
+- **Method**: `GET`
+- **Description**: Calculates the shortest path between two states.
+- **Parameters**:
+  - `start`: Name of the starting state.
+  - `destiny`: Name of the destination state.
+- **Response**:
+  ```json
   {
-    "distancia_total": 558,
-    "camino": ["Alabama", "Florida"]
+    "total distance": 558,
+    "path": ["Alabama", "Florida"]
   }
-- **Errores**:
-  - 404: Si el estado de inicio o destino no se encuentra.
+  ```
+- **Errors**:
+  - `404`: If the starting or destination state is not found.
 
-### 3. Obtener Lista de Estados
+### 3. Get List of States
 
-- **URL**: /estados
-- **Método**: GET
-- **Descripción**: Devuelve la lista de nombres de todos los estados.
-- **Respuesta**:
+- **URL**: `/states`
+- **Method**: `GET`
+- **Description**: Returns a list of all state names.
+- **Response**:
+  ```json
   ["Alabama", "Alaska", "Arizona", ...]
+  ```
 
-### 4. Generar Clave API
+### 4. Generate API Key
 
-- **URL**: /generar-api-key
-- **Método**: POST
-- **Descripción**: Genera una nueva clave API con un tiempo de expiración.
-- **Respuesta**:
+- **URL**: `/generate-api-key`
+- **Method**: `POST`
+- **Description**: Generates a new API key with an expiration time.
+- **Response**:
+  ```json
   {
-    "api_key": "nueva_api_key_generada",
-    "expiracion": "2024-10-15T12:34:56"
+    "api_key": "new_generated_api_key",
+    "expiration": "2024-10-15T12:34:56"
   }
+  ```
 
-### 5. Ver Registro de Peticiones (Solo Superusuario)
+### 5. View Request Log (Superuser Only)
 
-- **URL**: /registro
-- **Método**: GET
-- **Descripción**: Devuelve el registro de todas las peticiones realizadas a la API. Solo accesible con la clave de superusuario.
-- **Autorización**: Requiere la cabecera X-API-KEY con la clave de superusuario.
-- **Respuesta**:
+- **URL**: `/superuser`
+- **Method**: `GET`
+- **Description**: Returns the log of all requests made to the API. Only accessible with the superuser key.
+- **Authorization**: Requires the `X-API-KEY` header with the superuser key.
+
+### 6. Projects
+
+- **URL**: `/projects`
+- **Method**: `GET`
+- **Description**: Retrieves a list of projects.
+- **Response**:
+  ```json
   [
     {
-      "timestamp": "2024-10-15T12:34:56",
-      "ruta": "/coordenadas",
-      "cliente": "127.0.0.1",
-      "rol": "Benichi"
+      "id": 1,
+      "name": "Project 1",
+      "description": "Description of project 1",
+      ...
     },
     ...
   ]
+  ```
 
-## Seguridad
+## Usage Examples
 
-El acceso a algunos endpoints está protegido mediante claves de API. La clave de superusuario es 1236789 y tiene acceso ilimitado. Las claves generadas tienen un tiempo de expiración definido.
+### Get State Coordinates
 
-## CORS
+```bash
+curl -X GET http://127.0.0.1:8000/coordinates
+```
 
-La API permite solicitudes desde cualquier origen configurando allow_origins=["*"].
+### Get Shortest Path
 
-## Algoritmo de Dijkstra
+```bash
+curl -X GET http://127.0.0.1:8000/shortest_path/Alabama/Florida
+```
 
-El algoritmo implementado en la función dijkstra() calcula el camino más corto en un grafo no dirigido, representado como un diccionario de adyacencia.
+### Get List of States
 
-## Contribuciones
+```bash
+curl -X GET http://127.0.0.1:8000/states
+```
 
-Si deseas contribuir, por favor abre un pull request o crea un issue para discutir los cambios.
+### Generate API Key
 
-## Licencia
+```bash
+curl -X POST http://127.0.0.1:8000/generate-api-key
+```
 
-Este proyecto está bajo la Licencia MIT.
+### View Request Log
 
---- 
+```bash
+curl -X GET http://127.0.0.1:8000/superuser -H "X-API-KEY: your_superuser_key"
+```
+
+### Get List of Projects
+
+```bash
+curl -X GET http://127.0.0.1:8000/projects
+```
+
+## Testing
+
+To run tests, you can use the `pytest` framework. Make sure you have it installed:
+
+```bash
+pip install pytest
+```
+
+Then run the tests:
+
+```bash
+pytest
+```
+
+## Contributing
+
+Contributions are welcome! If you would like to contribute, please fork the repository and submit a pull request. Ensure that your code is well-tested and follows the project's coding conventions.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---

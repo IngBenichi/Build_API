@@ -27,7 +27,7 @@ class State(BaseModel):
     state: str
     coord: List[float]
 
-estados_grafo = {
+states_graph = {
     "Alabama": {"Florida": 558, "Georgia": 302, "Mississippi": 222},
     "Alaska": {"Washington": 1800, "Hawaii": 2500},
     "Arizona": {"Utah": 841, "Nevada": 761},
@@ -81,7 +81,7 @@ estados_grafo = {
 }
 
 
-estados = [
+states = [
     { "state": "Alabama", "coord": [32.806671, -86.791130] },
     { "state": "Alaska", "coord": [61.370716, -152.404419] },
     { "state": "Arizona", "coord": [33.729759, -111.431221] },
@@ -136,80 +136,80 @@ estados = [
 
 
 
-def dijkstra(grafo: Dict[str, Dict[str, int]], inicio: str, destino: str) -> Tuple[int, List[str]]:
-    queue = [(0, inicio, [])]
-    visitados = set()
+def dijkstra(graph: Dict[str, Dict[str, int]], start: str, destiny: str) -> Tuple[int, List[str]]:
+    queue = [(0, start, [])]
+    visited = set()
 
     while queue:
-        (costo_actual, nodo_actual, camino) = heapq.heappop(queue)
+        (current_cost, current_node, path) = heapq.heappop(queue)
 
-        if nodo_actual in visitados:
+        if current_node in visited:
             continue
 
-        camino = camino + [nodo_actual]
-        visitados.add(nodo_actual)
+        path = path + [current_node]
+        visited.add(current_node)
 
-        if nodo_actual == destino:
-            return costo_actual, camino
+        if current_node == destiny:
+            return current_cost, path
 
-        for vecino, peso in grafo[nodo_actual].items():
-            if vecino not in visitados:
-                heapq.heappush(queue, (costo_actual + peso, vecino, camino))
+        for neighbor, weight in graph[current_node].items():
+            if neighbor not in visited:
+                heapq.heappush(queue, (current_cost + weight, neighbor, path))
 
     return float("inf"), []
 
-@app.get("/coordenadas", response_model=List[State])
-async def obtener_coordenadas():
-    return estados
+@app.get("/coordinates", response_model=List[State])
+async def get_coordinates():
+    return states
 
 
-@app.get("/camino_mas_corto/{inicio}/{destino}")
-async def obtener_camino_mas_corto(inicio: str, destino: str) -> Dict[str, Any]:
-    if inicio not in estados_grafo or destino not in estados_grafo:
-        raise HTTPException(status_code=404, detail="Estado no encontrado")
+@app.get("/shortest_path/{start}/{destiny}")
+async def get_shortest_path(start: str, destiny: str) -> Dict[str, Any]:
+    if start not in states_graph or destiny not in states_graph:
+        raise HTTPException(status_code=404, detail="Status not found")
 
-    distancia, camino = dijkstra(estados_grafo, inicio, destino)
-    return {"distancia_total": distancia, "camino": camino}
+    distance, path = dijkstra(states_graph, start, destiny)
+    return {"total distance": distance, "path": path}
 
 
-@app.get("/estados", response_model=List[str])
-async def obtener_estados() -> List[str]:
-    return list(estados_grafo.keys())
+@app.get("/states", response_model=List[str])
+async def get_states() -> List[str]:
+    return list(states_graph.keys())
 
 
 APIKeyHeader_name = "X-API-KEY"
 api_key_header = APIKeyHeader(name=APIKeyHeader_name)
-api_keys_validas = {}
+valid_api_keys = {}
 SUPERUSER_API_KEY = "1236789"  
-TIEMPO_EXPIRACION = 60  
+EXPIRATION_TIME = 60  
 SUPERUSER_ROLE = "Benichi"
 
-async def validar_api_key(api_key: str = Depends(api_key_header)):
-    if api_key not in api_keys_validas and api_key != SUPERUSER_API_KEY:
-        raise HTTPException(status_code=403, detail="Clave API inválida")
+async def validate_api_key(api_key: str = Depends(api_key_header)):
+    if api_key not in valid_api_keys and api_key != SUPERUSER_API_KEY:
+        raise HTTPException(status_code=403, detail="API key has expired")
 
     if api_key == SUPERUSER_API_KEY:
         return SUPERUSER_ROLE
 
-    expiracion = api_keys_validas[api_key]
-    if datetime.now() > expiracion:
-        del api_keys_validas[api_key]  
+    expiration = valid_api_keys[api_key]
+    if datetime.now() > expiration:
+        del valid_api_keys[api_key]  
         raise HTTPException(status_code=403, detail="Clave API ha expirado")
 
 
-@app.post("/generar-api-key")
-def generar_api_key():
-    nueva_api_key = secrets.token_hex(32)  
-    expiracion = datetime.now() + timedelta(minutes=TIEMPO_EXPIRACION)  
-    api_keys_validas[nueva_api_key] = expiracion  
-    return {"api_key": nueva_api_key, "expiracion": expiracion.isoformat()}
+@app.post("/generate-api-key")
+def generate_api_key():
+    new_api_key = secrets.token_hex(32)  
+    expiration = datetime.now() + timedelta(minutes=EXPIRATION_TIME)  
+    valid_api_keys[new_api_key] = expiration  
+    return {"api_key": new_api_key, "expiration": expiration.isoformat()}
 
 
-@app.get("/superuser", dependencies=[Depends(validar_api_key)])
+@app.get("/superuser", dependencies=[Depends(validate_api_key)])
 def superuser_endpoint(api_key: str = Depends(api_key_header)):
     if api_key != SUPERUSER_API_KEY:
-        raise HTTPException(status_code=403, detail="Acceso denegado: se requiere superusuario")
-    return {"detail": "Acceso permitido para el superusuario"}
+        raise HTTPException(status_code=403, detail="Access denied: superuser required")
+    return {"detail": "Access allowed for superuser"}
 
 
 @app.get("/")
