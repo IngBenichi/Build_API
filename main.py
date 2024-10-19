@@ -325,3 +325,81 @@ def get_orders():
     return JSONResponse(content=orders_overview.dict())
 
 
+class Projects(BaseModel):
+    id: int
+    title: Optional[str] = None
+    img: Optional[str] = None
+    members: Optional[str] = None
+    budget: Optional[int] = 0
+    completion: Optional[int] = None
+
+class MonthlyEarnings(BaseModel):
+    percentage: str
+    image: str
+
+
+class ProjectsOverview(BaseModel):
+    monthly_earnings: MonthlyEarnings
+    projects: List[Projects]
+
+projects_overview = ProjectsOverview(
+    monthly_earnings=MonthlyEarnings(
+        percentage="30",
+        image="./src/assets/Stadistics/check.svg" 
+    ),
+projects = [
+    {
+      "id" : 1,
+      "title": "Chakra Soft UI Version",
+      "img": "./src/assets/Stadistics/xd.svg",
+      "members": "./src/assets/Stadistics/avatar3.svg",
+      "budget": 14000,
+      "completion": 60
+    },
+    {
+      "id" : 2,
+      "title": "Add Progress Track",
+      "img": "./src/assets/Stadistics/addprogress.svg",
+      "members": "./src/assets/Stadistics/avatar2.svg",
+      "budget": 3000,
+      "completion": 10
+    },
+    {
+      "id" : "3",
+      "title": "Fix Platform Errors",
+      "img": "./src/assets/Stadistics/fixplatform.svg",
+      "members": "./src/assets/Stadistics/avatar2.svg",
+      "budget": 0,
+      "completion": 100
+    },
+    {
+      "id" : "4",
+      "title": "Launch our Mobile App",
+      "img": "./src/assets/Stadistics/launchmobile.svg",
+      "members": "./src/assets/Stadistics/avatar4.svg",
+      "budget": 32000,
+      "completion": 100
+    },
+    {
+      "id" : "5",
+      "title": "Add the New Pricing Page",
+      "img": "./src/assets/Stadistics/addpricing.svg",
+      "members": "./src/assets/Stadistics/avatar3.svg",
+      "budget": 400,
+      "completion": 25
+    },
+    {
+      "id" : "6",
+      "title": "Redesign New Online Shop",
+      "img": "./src/assets/Stadistics/redesign.svg",
+      "members": "./src/assets/Stadistics/avatar2.svg",
+      "budget": 7600,
+      "completion": 40
+    },
+]
+)
+
+@app.get("/projects")
+def get_data():
+    return JSONResponse(content=projects_overview.dict())
+
