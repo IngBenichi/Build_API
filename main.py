@@ -216,7 +216,7 @@ def superuser_endpoint(api_key: str = Depends(api_key_header)):
 async def root():
     return {"message": "Hello, FastAPI"}
 
-app.mount("./src/assets/Stadistics", StaticFiles(directory="static"), name="static")
+app.mount("/src/assets/Stadistics", StaticFiles(directory="static"), name="static")
 
 # Datos de ejemplo
 statistics = [
