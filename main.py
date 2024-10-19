@@ -214,7 +214,7 @@ def superuser_endpoint(api_key: str = Depends(api_key_header)):
 
 @app.get("/")
 async def root():
-    return {"message": "Hola, FastAPI"}
+    return {"message": "Hello, FastAPI"}
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
